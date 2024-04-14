@@ -1,4 +1,6 @@
+
 from Board import Board
+from priorityQ import PriorityQueue
 
 
 class Takuzu():
@@ -43,7 +45,7 @@ class Takuzu():
                 return False
             return True
         
-        #Rows and Columns
+        #01: Rows and Columns
         #Rows
         row_t = self.board.row_tally
         for i in range(dim):
@@ -176,7 +178,18 @@ class Takuzu():
                         return [(i, j, 0), (i, j, 1)]
         return res
     
-     
+    def heuristic(self, state):
+        score = 0
+
+        empty_rows = [row.count(2) for row in state]
+        empty_cols = [sum(1 for row in state if row[i] == 2) for i in range(len(state))]
+        
+
+        # Prioritize rows and columns with fewer empty cells
+        score += sum(empty_rows)
+        score += sum(empty_cols)
+
+        return score
     
     def result(self):
         while self.goal_test() == False:
@@ -194,8 +207,45 @@ class Takuzu():
             print(self.board)
 
         return True 
-            
-            
+
+    def is_valid(self, state, row, col):
+        # Check if a given state is valid according to the rules of Binairo
+        # Check the row
+        for i in range(len(state)):
+            if i != col and state[row][i] == state[row][col]:
+                return False
+
+        # Check the column
+        for i in range(len(state)):
+            if i != row and state[i][col] == state[row][col]:
+                return False
+
+        return True
+    
+    def get_successors(self, state, row, col):
+        successors = []
+
+        # Generate two new states
+        state0 = [r[:] for r in state]
+        
+        state0[row][col] = 0
+        if self.is_valid(state0, row, col):
+            successors.append((state0, row, col + 1 if col + 1 < len(state) else 0, col + 1 if col + 1 < len(state) else row + 1))
+        # print(successors)
+        state1 = [r[:] for r in state]
+        state1[row][col] = 1
+        if self.is_valid(state1, row, col):
+            successors.append((state1, row, col + 1 if col + 1 < len(state) else 0, col + 1 if col + 1 < len(state) else row + 1))
+
+        return successors
+    
+    
+    def solve(self):
+        queue = PriorityQueue()
+        queue.insert([self.heuristic(self.board.array),self.board.array, 0, 0])
+        print(self.heuristic(self.board.array))
+        self.get_successors(self.board.array,2,2)
+        return
         
     
     def goal_test(self):
@@ -204,7 +254,8 @@ class Takuzu():
         row_t = board.row_tally
         col_t = board.col_tally
         dim = board.dim
-        
+        if dim % 2 == 1:
+            raise NameError("Not available matrix")
         # print(row_t)
         #Check sum of number 0s and number 1s in one row == dim
         for i in range(dim):

@@ -79,18 +79,7 @@ class Board:
                     col_tally[j][val] += 1
         return Board(mat, dim, dim*dim - empty_cells, row_tally, col_tally)
     
-    def apply_action(self, action):
-        array = np.copy(self.array)
-        array[action[0]][action[1]] = action[2]
-        new_empty_cells = self.empty_cells - 1
-        new_row_tally = []
-        new_col_tally = []
-        for i in range(self.dim):
-            new_row_tally.append(self.row_tally[i].copy())
-            new_col_tally.append(self.col_tally[i].copy())
-        new_row_tally[action[0]][action[2]] += 1
-        new_col_tally[action[1]][action[2]] += 1
-        return Board(array, self.dim, new_empty_cells, new_row_tally, new_col_tally)
+    
 
 
 

@@ -5,7 +5,7 @@ from Takuzu import Takuzu
 if __name__ == "__main__":  # 
 
     
-    board = Board.read_input('./tests/input/test3.txt')
+    board = Board.read_input('./tests/input/test1.txt')
     
     
     
@@ -16,7 +16,7 @@ if __name__ == "__main__":  #
     # print(board.row_tally)
     # print(board.col_tally)
     # print(takuzu.actions())
-    takuzu.result()
+    takuzu.solve()
     # print()
     # print(takuzu.board)
     # f = open("./tests/output/test3.txt", "w")
