@@ -54,11 +54,16 @@ class Board:
         return (v1, v2)
     
     @staticmethod
-    def parse_instance_from_stdin():
+    def read_input(filename):
         mat = []
-        dim = int(input())
-        for f in range(dim):
-            mat.append([int(i) for i in input().split()])
+        dim = 0
+        
+        
+        with open(filename) as g:
+            dim = [int(it) for it in g.readline().split()][0]
+            for _ in range(dim):
+                mat.append([int(i) for i in g.readline().strip().split()])
+        # print(mat)
         empty_cells = 0
         row_tally = []
         col_tally = []
@@ -72,7 +77,7 @@ class Board:
                     empty_cells += 1
                     row_tally[i][val] += 1
                     col_tally[j][val] += 1
-        return Board(np.array(mat), dim, empty_cells, row_tally, col_tally)
+        return Board(mat, dim, dim*dim - empty_cells, row_tally, col_tally)
     
     def apply_action(self, action):
         array = np.copy(self.array)

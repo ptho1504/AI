@@ -24,7 +24,7 @@ class Takuzu():
         
         self.board.row_tally = row_tally
         self.board.col_tally = col_tally
-        self.board.empty_cells = empty_cells
+        self.board.empty_cells = dim*dim - empty_cells
     
     def actions(self):
         dim = self.board.dim
@@ -58,10 +58,12 @@ class Takuzu():
             
             
             if zeros + ones == dim - 1:
-                p = 0
+                p = None
                 for j in range(dim):
                     if self.board.get_number(i, j) == 2:
                         p = j #index column need to filled
+                if p is None:
+                    return []
                 
                 if zeros - ones != 0:
                     v = 1 if (zeros > ones) else (0)
@@ -100,10 +102,12 @@ class Takuzu():
                 return []
             
             if zeros + ones == dim - 1:
-                p = 0
+                p = None
                 for j in range(dim):
                     if self.board.get_number(j, i) == 2:
                         p = j
+                if p is None:
+                    return []
                 if zeros - ones != 0:
                     v = 1 if (zeros > ones) else (0)
                     if check_adjacent( p, i, v) and check_two_numbers(
@@ -176,17 +180,18 @@ class Takuzu():
     
     def result(self):
         while self.goal_test() == False:
-           if(self.actions() != []):
+            if(self.actions() != []):
             #    print("self.action", self.actions())
-               actions = self.actions()
-               self.path.append(actions)
+                actions = self.actions()
+                self.path.append(actions)
             #    print("action", actions)
-               x = actions[0][0]
-               y = actions[0][1]
-               v = actions[0][2]
-               self.board.array[x][y] = v
-               self.update()
-           print(self.board)
+                x = actions[0][0]
+                y = actions[0][1]
+                v = actions[0][2]
+                self.board.array[x][y] = v
+            self.update()
+            print("")
+            print(self.board)
 
         return True 
             
