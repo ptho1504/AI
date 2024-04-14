@@ -1,11 +1,12 @@
 from Board import Board
-
+from copy import deepcopy
+import time
 
 class Takuzu():
     def __init__(self, board: Board):
         self.board = board
         self.path = []
-    
+        
     def update(self):
         empty_cells = 0
         row_tally = []
@@ -14,6 +15,7 @@ class Takuzu():
         for i in range(dim):
             row_tally.append([0, 0])
             col_tally.append([0, 0])
+            
         for i in range(dim):
             for j in range(dim):
                 val = self.board.array[i][j]
@@ -177,24 +179,38 @@ class Takuzu():
         return res
     
      
+    def apply_actions(self, actions):
+        new_board = deepcopy(self.board)
+        for action in actions:
+            x, y, v = action
+            new_board.array[x][y] = v
+
+        return new_board
     
     def result(self):
-        while self.goal_test() == False:
-            if(self.actions() != []):
-            #    print("self.action", self.actions())
-                actions = self.actions()
-                self.path.append(actions)
-            #    print("action", actions)
-                x = actions[0][0]
-                y = actions[0][1]
-                v = actions[0][2]
-                self.board.array[x][y] = v
+        start_time = time.time()
+        if self.goal_test():
+            return True
+        
+        actions = self.actions()
+        
+        for action in actions:
+            x,y,v = action
+            self.board.array[x][y] = v
             self.update()
-            print("")
-            print(self.board)
-
-        return True 
+            # print(action)
+            # print(self.board)
+            if self.result():
+                self.path.append(action)
+                end_time = time.time()
+                # print(f"Time execution: {end_time - start_time} seconds")
+                return True
             
+            self.board.array[x][y] = 2
+            self.update()
+        # end_time = time.time()
+        # print(f"Time execution: {end_time - start_time} seconds")
+        return False
             
         
     
