@@ -117,7 +117,7 @@ class Takuzu():
                     ):
                         return [(p, i, v)]
                     else:
-                        return []
+                        return []   
                 
 
             # If number of ones or number of zeros is maximed

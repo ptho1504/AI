@@ -11,26 +11,28 @@ from copy import deepcopy
 
 
 
-# if __name__ == "__main__":  # 
+if __name__ == "__main__":  
 
-    # board = Board.read_input('./tests/input/test1.txt')
+    board = Board.read_input('./tests/input/test13.txt')
     
-    # before_memory = get_memory_usage()
-    # # print(before_memory)
-    # start_time = time.time()
-    # takuzu = Takuzu(board)
-    # # print(start_time)
-    # takuzu.result()
+    before_memory = utils.get_memory_usage()
+    # print(before_memory)
+    start_time = time.time()
+    takuzu = Takuzu(board)
+    # print(start_time)
+    takuzu.result()
     
     
-    # end_time = time.time()
-    # after_memory = get_memory_usage()
-    # # print(end_time)
-    # # print(after_memory)
-    # memory_diff = after_memory - before_memory
-    # print(f"Time execution1: {end_time - start_time} seconds")
-    # print(f"Memory usage: {memory_diff} bytes")
-    
+    end_time = time.time()
+    after_memory = utils.get_memory_usage()
+    # print(end_time)
+    # print(after_memory)
+    memory_diff = after_memory - before_memory
+    print(f"Time execution1: {end_time - start_time} seconds")
+    print(f"Memory usage: {memory_diff} bytes")
+    i = 13
+    f = open('./tests/output/test'+ str(i)+'.txt', "w")
+    f.write(str(takuzu.board))
     
     # print("")
     # print(takuzu.board)
@@ -47,11 +49,14 @@ from copy import deepcopy
     #     # print(end - start)
     #     f = open('./tests/output/test'+ str(i)+'.txt', "w")
     #     f.write(str(takuzu.board))
-board = Board.read_input('./tests/input/test1.txt')
-board_copy = deepcopy(board)
-takuzu = Takuzu(board)
-takuzu.result()
-dim = board.dim
-path = takuzu.path
+    
+    
+    
+# board = Board.read_input('./tests/input/test1.txt')
+# board_copy = deepcopy(board)
+# takuzu = Takuzu(board)
+# takuzu.result()
+# dim = board.dim
+# path = takuzu.path
 
-game = Game(board_copy, dim, path)
+# game = Game(board_copy, dim, path)
