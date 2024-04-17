@@ -155,7 +155,7 @@ class Takuzu():
                 if self.board.get_number(i, j) == 2:
                     h = self.board.adjacent_horizontal_numbers(i, j)
                     v = self.board.adjacent_vertical_numbers(i, j)
-                    # Se houver alguma dupla igual, a escolha é óbvia
+                    
                     if h == (0, 0) or v == (0, 0):
                         return [(i, j, 1)]
                     if h == (1, 1) or v == (1, 1):
@@ -178,7 +178,55 @@ class Takuzu():
                         return [(i, j, 0), (i, j, 1)]
         return res
     
-     
+    def is_valid_move(self, x, y, v):
+        # Check if the cell is empty
+        if self.board.get_number(x, y) != 2:
+            return False
+        
+        # Check if the move violates the rule of not having three consecutive numbers
+        for m in ("previous", "following", "below", "above"):
+            f = self.board.two_numbers(x, y, m)
+            if f == (v, v):
+                return False
+        
+        # Check if the move violates the rule of adjacent horizontal and vertical numbers
+        hori = self.board.adjacent_horizontal_numbers(x, y)
+        vert = self.board.adjacent_vertical_numbers(x, y)
+        
+        if hori == (v, v) or vert == (v, v):
+            return False
+        
+        return True
+    
+    def heuristic_empty_cells(self):
+        empty_cells = 0
+        for i in range(self.board.dim):
+            for j in range(self.board.dim):
+                if self.board.get_number(i, j) == 2:  # 2 represents an empty cell
+                    if self.is_valid_move(i, j, 0) or self.is_valid_move(i, j, 1):
+                        empty_cells += 1
+        return empty_cells
+    
+    def heuristic_consistency_diversity(self):
+        row_diff = sum(abs(row[0] - row[1]) for row in self.board.row_tally)
+        col_diff = sum(abs(col[0] - col[1]) for col in self.board.col_tally)
+        return row_diff + col_diff
+    
+    def heuristic(self):
+        return self.heuristic_empty_cells() + self.heuristic_consistency_diversity()
+    
+    def actions_sorted_by_heuristic(self):
+        actions = self.actions()
+        # if len(actions) > 1:
+        #     for action in actions:
+        #         print ("diem", self.apply_heuristic(action))
+        return sorted(actions, key=lambda action: self.apply_heuristic(action))
+    
+    def apply_heuristic(self, action):
+        # new_board = self.apply_actions([action])
+        return self.heuristic()
+    
+    
     def apply_actions(self, actions):
         new_board = deepcopy(self.board)
         for action in actions:
@@ -187,32 +235,56 @@ class Takuzu():
 
         return new_board
     
+    # def result(self):
+    #     start_time = time.time()
+    #     if self.goal_test():
+    #         return True
+        
+    #     actions = self.actions()
+        
+    #     for action in actions:
+    #         x,y,v = action
+    #         self.board.array[x][y] = v
+    #         self.update()
+    #         # print(action)
+    #         # print(self.board)
+    #         if self.result():
+    #             self.path.append(action)
+    #             end_time = time.time()
+    #             # print(f"Time execution: {end_time - start_time} seconds")
+    #             return True
+            
+    #         self.board.array[x][y] = 2
+    #         self.update()
+    #     # end_time = time.time()
+    #     # print(f"Time execution: {end_time - start_time} seconds")
+    #     return False
+    
     def result(self):
-        start_time = time.time()
+        
         if self.goal_test():
             return True
         
-        actions = self.actions()
+        actions = self.actions_sorted_by_heuristic()
         
         for action in actions:
-            x,y,v = action
+            
+            x, y, v = action
             self.board.array[x][y] = v
             self.update()
-            # print(action)
+            
             # print(self.board)
+            # print("")
             if self.result():
                 self.path.append(action)
-                end_time = time.time()
-                # print(f"Time execution: {end_time - start_time} seconds")
+                
                 return True
-            
+                
             self.board.array[x][y] = 2
             self.update()
-        # end_time = time.time()
-        # print(f"Time execution: {end_time - start_time} seconds")
+        
         return False
             
-        
     
     def goal_test(self):
     
