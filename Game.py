@@ -19,10 +19,12 @@ def onClickfinish(event, boardcopy):
 def onClickAuto(event, solved):
     def auto(solved):
         # print(solved)
-        for s in solved:
+        if Game.step < len(solved):
+            s = solved[Game.step]
             x = s[0]
             y = s[1]
             value = s[2]
+            Game.step += 1
             Cell.changeState(x,y,value)
             Game.cell_dict[(x,y)].cell_btn_object['text'] = value
             
@@ -30,7 +32,8 @@ def onClickAuto(event, solved):
     auto(solved)
     
 
-
+def onClickReset(event, ): pass
+    
 
 
 def update(board):
@@ -149,6 +152,7 @@ class Game:
     def __init__(self, boardcopy, dim,solved) :
         Game.boardcopy = boardcopy
         self.solved = solved
+        Game.step = 0
         Game.cell_dict = {}
         root = Tk()
         
@@ -193,19 +197,14 @@ class Game:
             sticky=NE
         )
 
-        auto_button = Button(text = "Auto", bg="red", font=('consolas', 20), width=10)
+        auto_button = Button(text = "Next", bg="red", font=('consolas', 20), width=10)
         auto_button.bind('<Button-1>', lambda event :  onClickAuto(Event, self.solved))
         auto_button.grid(
             column= 20,
             row= 60
         )
         
-        # reset_button = Button(text = "Auto", bg="red", font=('consolas', 20), width=10)
-        # reset_button.bind('<Button-1>', lambda event :  onClickReset(Event, self.solved))
-        # auto_button.grid(
-        #     column= 20,
-        #     row= 60
-        # )
+        
         
         
         for x in range(dim):

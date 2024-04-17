@@ -52,7 +52,7 @@ class Board:
             v1 = self.array[row][col + 1] if (col < self.dim - 1) else (None)
             v2 = self.array[row][col + 2] if (col < self.dim - 2) else (None)
         return (v1, v2)
-    
+   
     @staticmethod
     def read_input(filename):
         mat = []
@@ -78,8 +78,3 @@ class Board:
                     row_tally[i][val] += 1
                     col_tally[j][val] += 1
         return Board(mat, dim, dim*dim - empty_cells, row_tally, col_tally)
-    
-    
-
-
-
